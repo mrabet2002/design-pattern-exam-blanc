@@ -1,6 +1,9 @@
 package ma.enset.entities;
 
 import ma.enset.adapter.HDMI;
+import ma.enset.aspects.annotations.Log;
+import ma.enset.aspects.annotations.SecuredBy;
+import ma.enset.config.AppConfig;
 
 import java.util.HashMap;
 
@@ -21,6 +24,7 @@ public class Container {
         agents = new HashMap<>();
     }
 
+    @SecuredBy(roles = {"ADMIN"})
     public void addAgent(Agent agent) {
         if (agentExists(agent.getName())) {
             throw new IllegalArgumentException("Agent with name " + agent.getName() + " already exists");
@@ -28,20 +32,25 @@ public class Container {
         agents.put(agent.getName(), agent);
     }
 
+    @SecuredBy(roles = {"ADMIN"})
     public void addAgent(String name) {
-        addAgent(new Agent(name));
+        Agent agent = new Agent(name);
+        addAgent(agent);
     }
 
+    @SecuredBy(roles = {"ADMIN"})
     public void addAgents(Agent... agents) {
         for (Agent agent : agents) {
             addAgent(agent);
         }
     }
 
+    @SecuredBy(roles = {"USER"})
     public Agent findAgent(String name) {
         return agents.get(name);
     }
 
+    @SecuredBy(roles = {"ADMIN"})
     public void removeAgent(String name) {
         agents.remove(name);
     }
@@ -50,6 +59,8 @@ public class Container {
         return agents.containsKey(name);
     }
 
+    @Log
+    @SecuredBy(roles = {"USER"})
     public void showAgents() {
         if (hdmi == null) {
             throw new IllegalStateException("HDMI not connected");

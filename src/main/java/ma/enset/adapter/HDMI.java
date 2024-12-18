@@ -1,7 +1,8 @@
 package ma.enset.adapter;
 
 import ma.enset.entities.Agent;
+import ma.enset.entities.IAgent;
 
 public interface HDMI {
-    void streamData(Agent agent);
+    void streamData(IAgent agent);
 }
